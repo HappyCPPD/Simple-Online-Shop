@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splurge - Featured Products</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        header {
+            background: linear-gradient(90deg, #4a90e2, #1a73e8);
+            color: white;
+            padding: 15px 20px;
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            background-color: #222;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+        nav a:hover {
+            background-color: #4a90e2;
+        }
+
+        .container {
+            padding: 40px;
+        }
+
+        h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .featured-products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            justify-content: center;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .product {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .product:hover {
+            transform: scale(1.05);
+        }
+
+        .product img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+
+        .product h4 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 5px;
+        }
+
+        .product p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn {
+            background: #4a90e2;
+            color: white;
+            padding: 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #1a73e8;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="index.html" style="color: white; text-decoration: none;">SPLURGE - SHOP SMART, SHOP EASY</a>
+    </header>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="featured.html">Featured</a>
+        <a href="discounts.html">Discounts</a>
+        <a href="new_arrivals.html">New Arrivals</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+
+    <div class="container">
+        <h2>Our Featured Products</h2>
+        <div class="featured-products">
+            <div class="product">
+                <img src="tablet.jpg" alt="Tablet">
+                <h4>Tablet</h4>
+                <p>Portable and powerful for entertainment and work.</p>
+                <div class="btn-container">
+                    <a href="#" class="btn">Buy Now</a>
+                </div>
+            </div>
+            <div class="product">
+                <img src="camera.jpg" alt="Camera">
+                <h4>Camera</h4>
+                <p>Capture stunning photos with high-resolution lenses.</p>
+                <div class="btn-container">
+                    <a href="#" class="btn">Buy Now</a>
+                </div>
+            </div>
+            <div class="product">
+                <img src="smartwatch.jpg" alt="Smartwatch">
+                <h4>Smartwatch</h4>
+                <p>Track fitness, receive notifications, and stay connected.</p>
+                <div class="btn-container">
+                    <a href="#" class="btn">Buy Now</a>
+                </div>
+            </div>
+            <div class="product">
+                <img src="laptop.jpg" alt="Laptop">
+                <h4>Laptop</h4>
+                <p>High-performance laptop for work and gaming.</p>
+                <div class="btn-container">
+                    <a href="#" class="btn">Buy Now</a>
+                </div>
+            </div>
+            <div class="product">
+                <img src="speaker.jpg" alt="Bluetooth Speaker">
+                <h4>Bluetooth Speaker</h4>
+                <p>Enjoy rich, clear sound anywhere you go.</p>
+                <div class="btn-container">
+                    <a href="#" class="btn">Buy Now</a>
+                </div>
+            </div>
+            <div class="product">
+                <img src="gamingconsole.jpg" alt="Gaming Console">
+                <h4>Gaming Console</h4>
+                <p>Immerse yourself in next-gen gaming experiences.</p>
+                <div class="btn-container">
+                    <a href="#" class="btn">Buy Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
