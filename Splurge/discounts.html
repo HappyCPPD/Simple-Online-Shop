@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splurge - Discounts</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #ff7b00;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --success: #2ecc71;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 18px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo span {
+            color: var(--secondary);
+        }
+
+        nav {
+            background-color: white;
+            padding: 12px 40px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 70px;
+            z-index: 999;
+        }
+
+        nav a {
+            color: var(--dark);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 10px 20px;
+            border-radius: 25px;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 70%;
+            left: 15%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page-banner {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            text-align: center;
+            padding: 50px 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 20%, rgba(0, 0, 0, 0.1) 100%);
+        }
+
+        .page-banner h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .page-banner p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section-heading {
+            margin: 60px 0 30px;
+            position: relative;
+            text-align: center;
+        }
+
+        .section-heading h2 {
+            font-size: 36px;
+            color: var(--dark);
+            display: inline-block;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-heading h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--secondary);
+            border-radius: 2px;
+        }
+
+        .section-heading p {
+            color: var(--gray);
+            max-width: 700px;
+            margin: 15px auto 0;
+            font-size: 18px;
+        }
+
+        .discounted-products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .product-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            height: 200px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: #f9f9f9;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            max-width: 100%;
+            max-height: 160px;
+            object-fit: contain;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--secondary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .discount-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .product-details {
+            padding: 25px;
+        }
+
+        .product-details h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .product-details p {
+            color: var(--gray);
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .price {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .original-price {
+            font-size: 16px;
+            color: var(--gray);
+            text-decoration: line-through;
+            margin-left: 10px;
+        }
+
+        .rating {
+            color: #ffc107;
+            font-size: 14px;
+        }
+
+        .savings {
+            color: #e74c3c;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(67, 97, 238, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .timer-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0 50px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s ease;
+        }
+
+        .timer-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timer-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .time-unit {
+            background: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            min-width: 80px;
+        }
+
+        .time-unit .number {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .time-unit .label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cta {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            text-align: center;
+            padding: 60px 30px;
+            border-radius: 15px;
+            margin: 60px 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s ease;
+        }
+
+        .cta.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .cta h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .cta p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 40px 20px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            text-align: left;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--secondary);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .copyright {
+            border-top: 1px solid #495057;
+            padding-top: 20px;
+            font-size: 14px;
+            color: #adb5bd;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+            
+            nav {
+                padding: 10px;
+                flex-wrap: wrap;
+                gap: 10px;
+                top: 65px;
+            }
+            
+            nav a {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            .discounted-products {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+            
+            .product-image {
+                height: 180px;
+            }
+            
+            .countdown {
+                flex-wrap: wrap;
+            }
+            
+            .section-heading h2 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="index.html" class="logo">Splurge<span>.</span></a>
+        <div class="cart-icon">
+            <!-- Cart icon placeholder -->
+        </div>
+    </header>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="featured.html">Featured</a>
+        <a href="discounts.html">Discounts</a>
+        <a href="new_arrivals.html">New Arrivals</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+
+    <div class="container">
+        <div class="page-banner">
+            <h1>Special Discounts</h1>
+            <p>Enjoy amazing deals on our premium products with limited-time offers and exclusive savings.</p>
+        </div>
+
+        <div class="timer-container">
+            <h3 class="timer-title">Flash Sale Ends In:</h3>
+            <div class="countdown">
+                <div class="time-unit">
+                    <div class="number">23</div>
+                    <div class="label">Hours</div>
+                </div>
+                <div class="time-unit">
+                    <div class="number">45</div>
+                    <div class="label">Minutes</div>
+                </div>
+                <div class="time-unit">
+                    <div class="number">18</div>
+                    <div class="label">Seconds</div>
+                </div>
+            </div>
+            <a href="#deals" class="btn btn-primary">Shop Now</a>
+        </div>
+
+        <div id="deals" class="section-heading">
+            <h2>Biggest Discounts</h2>
+            <p>Limited-time offers on our most popular products. Hurry while supplies last!</p>
+        </div>
+
+        <div class="discounted-products">
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="/api/placeholder/400/320" alt="Tablet">
+                    <span class="discount-badge">-30%</span>
+                </div>
+                <div class="product-details">
+                    <h3>Premium Tablet</h3>
+                    <p>Portable and powerful for entertainment and productivity on the go.</p>
+                    <div class="product-price">
+                        <div>
+                            <span class="price">$299.99</span>
+                            <span class="original-price">$429.99</span>
+                        </div>
+                        <div class="rating">★★★★★</div>
+                    </div>
+                    <div class="savings">You save: $130.00</div>
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-primary">Buy Now</a>
+                        <a href="#" class="btn btn-outline">Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="/api/placeholder/400/320" alt="Camera">
+                    <span class="discount-badge">-25%</span>
+                </div>
+                <div class="product-details">
+                    <h3>4K Digital Camera</h3>
+                    <p>Capture stunning photos with high-resolution lenses and advanced features.</p>
+                    <div class="product-price">
+                        <div>
+                            <span class="price">$674.99</span>
+                            <span class="original-price">$899.99</span>
+                        </div>
+                        <div class="rating">★★★★☆</div>
+                    </div>
+                    <div class="savings">You save: $225.00</div>
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-primary">Buy Now</a>
+                        <a href="#" class="btn btn-outline">Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="/api/placeholder/400/320" alt="Smartwatch">
+                    <span class="discount-badge">-40%</span>
+                </div>
+                <div class="product-details">
+                    <h3>Smart Fitness Watch</h3>
+                    <p>Track fitness, receive notifications, and stay connected with style.</p>
+                    <div class="product-price">
+                        <div>
+                            <span class="price">$137.99</span>
+                            <span class="original-price">$229.99</span>
+                        </div>
+                        <div class="rating">★★★★★</div>
+                    </div>
+                    <div class="savings">You save: $92.00</div>
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-primary">Buy Now</a>
+                        <a href="#" class="btn btn-outline">Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="/api/placeholder/400/320" alt="Headphones">
+                    <span class="discount-badge">-50%</span>
+                </div>
+                <div class="product-details">
+                    <h3>Wireless Headphones</h3>
+                    <p>Immersive sound experience with noise cancellation technology.</p>
+                    <div class="product-price">
+                        <div>
+                            <span class="price">$149.99</span>
+                            <span class="original-price">$299.99</span>
+                        </div>
+                        <div class="rating">★★★★★</div>
+                    </div>
+                    <div class="savings">You save: $150.00</div>
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-primary">Buy Now</a>
+                        <a href="#" class="btn btn-outline">Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="/api/placeholder/400/320" alt="Smart TV">
+                    <span class="discount-badge">-35%</span>
+                </div>
+                <div class="product-details">
+                    <h3>4K Smart TV</h3>
+                    <p>Ultra HD resolution with smart features for the ultimate viewing experience.</p>
+                    <div class="product-price">
+                        <div>
+                            <span class="price">$649.99</span>
+                            <span class="original-price">$999.99</span>
+                        </div>
+                        <div class="rating">★★★★☆</div>
+                    </div>
+                    <div class="savings">You save: $350.00</div>
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-primary">Buy Now</a>
+                        <a href="#" class="btn btn-outline">Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="/api/placeholder/400/320" alt="Gaming Console">
+                    <span class="discount-badge">-20%</span>
+                </div>
+                <div class="product-details">
+                    <h3>Portable Gaming Console</h3>
+                    <p>Immerse yourself in next-gen gaming experiences on the go.</p>
+                    <div class="product-price">
+                        <div>
+                            <span class="price">$359.99</span>
+                            <span class="original-price">$449.99</span>
+                        </div>
+                        <div class="rating">★★★★☆</div>
+                    </div>
+                    <div class="savings">You save: $90.00</div>
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-primary">Buy Now</a>
+                        <a href="#" class="btn btn-outline">Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta">
+            <h2>Join Our Loyalty Program</h2>
+            <p>Sign up for our loyalty program today and get additional 10% off on all discounted items plus free shipping on your first order!</p>
+            <a href="#" class="btn btn-primary">Sign Up Now</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Shop</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="new_arrivals.html">New Arrivals</a></li>
+                    <li><a href="featured.html">Featured Products</a></li>
+                    <li><a href="discounts.html">Discounts</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Customer Care</h3>
+                <ul>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="https://github.com/HappyCPPD">FAQs</a></li>
+                    <li><a href="https://github.com/HappyCPPD">Shipping Policy</a></li>
+                    <li><a href="https://github.com/HappyCPPD">Returns & Exchanges</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>About Splurge</h3>
+                <ul>
+                    <li><a href="https://github.com/HappyCPPD">Our Story</a></li>
+                    <li><a href="https://github.com/HappyCPPD">Careers</a></li>
+                    <li><a href="https://github.com/HappyCPPD">Press</a></li>
+                    <li><a href="https://github.com/HappyCPPD">Blog</a></li>
+                    <li><a href="https://github.com/HappyCPPD">Sustainability</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Connect With Us</h3>
+                <ul>
+                    <li><a href="https://github.com/HappyCPPD">Instagram</a></li>
+                    <li><a href="https://github.com/HappyCPPD">Facebook</a></li>
+                    <li><a href="https://github.com/HappyCPPD">Twitter</a></li>
+                    <li><a href="https://github.com/HappyCPPD">Pinterest</a></li>
+                    <li><a href="https://github.com/HappyCPPD">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2025 Splurge. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const productCards = document.querySelectorAll(".product-card");
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("show");
+                    }
+                });
+            }, { threshold: 0.2 });
+            
+            productCards.forEach((card, index) => {
+                observer.observe(card);
+                card.style.transitionDelay = `${index * 0.1}s`;
+            });
+            
+            const timerContainer = document.querySelector(".timer-container");
+            observer.observe(timerContainer);
+            
+            const cta = document.querySelector(".cta");
+            observer.observe(cta);
+            
+            let countdown = {
+                hours: 23,
+                minutes: 45,
+                seconds: 18
+            };
+            
+            const hourElement = document.querySelector(".time-unit:nth-child(1) .number");
+            const minuteElement = document.querySelector(".time-unit:nth-child(2) .number");
+            const secondElement = document.querySelector(".time-unit:nth-child(3) .number");
+            
+            function updateCountdown() {
+                countdown.seconds--;
+                
+                if (countdown.seconds < 0) {
+                    countdown.seconds = 59;
+                    countdown.minutes--;
+                    
+                    if (countdown.minutes < 0) {
+                        countdown.minutes = 59;
+                        countdown.hours--;
+                        
+                        if (countdown.hours < 0) {
+                            countdown = {
+                                hours: 23,
+                                minutes: 59,
+                                seconds: 59
+                            };
+                        }
+                    }
+                }
+                
+                hourElement.textContent = String(countdown.hours).padStart(2, '0');
+                minuteElement.textContent = String(countdown.minutes).padStart(2, '0');
+                secondElement.textContent = String(countdown.seconds).padStart(2, '0');
+            }
+            
+            setInterval(updateCountdown, 1000);
+        });
+    </script>
+</body>
+
+</html>
